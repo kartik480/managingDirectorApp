@@ -413,6 +413,54 @@ class _DashboardPageState extends State<DashboardPage> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.menu,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Managing Director',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'Welcome, ${widget.username}',
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: () => _showSnackBar('Notifications'),
+          ),
+        ],
+      ),
+      drawer: _buildDrawer(),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -426,54 +474,6 @@ class _DashboardPageState extends State<DashboardPage> with TickerProviderStateM
             opacity: _fadeAnimation,
             child: Column(
               children: [
-                // Header
-                Container(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.business,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Managing Director',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              'Welcome, ${widget.username}',
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.notifications, color: Colors.white),
-                        onPressed: () => _showSnackBar('Notifications'),
-                      ),
-                    ],
-                  ),
-                ),
-
                 // Main Content
                 Expanded(
                   child: Container(
@@ -646,6 +646,322 @@ class _DashboardPageState extends State<DashboardPage> with TickerProviderStateM
               textAlign: TextAlign.center,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.blue, Colors.lightBlueAccent, Colors.blueAccent],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: Column(
+          children: [
+            // User Profile Section
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
+              child: Column(
+                children: [
+                  // Profile Avatar
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(0.2),
+                      border: Border.all(color: Colors.white, width: 3),
+                    ),
+                    child: const Icon(
+                      Icons.person,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // User Name
+                  Text(
+                    widget.username,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  // User Role
+                  const Text(
+                    'Managing Director',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Status Indicator
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.green, width: 1),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.circle, color: Colors.green, size: 8),
+                        SizedBox(width: 6),
+                        Text(
+                          'Online',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Divider
+            Container(
+              height: 1,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              color: Colors.white.withOpacity(0.2),
+            ),
+            
+            const SizedBox(height: 20),
+            
+            // Navigation Menu Items
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                children: [
+                  _buildDrawerItem(
+                    icon: Icons.dashboard,
+                    title: 'Dashboard',
+                    subtitle: 'Main overview',
+                    onTap: () => Navigator.pop(context),
+                    isActive: true,
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.link,
+                    title: 'Employee Links',
+                    subtitle: 'Manage connections',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const EmpLinksPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.data_usage,
+                    title: 'Data Analytics',
+                    subtitle: 'View insights',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const DataLinksPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.work,
+                    title: 'Work Management',
+                    subtitle: 'Projects & tasks',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const WorksLinksPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.people,
+                    title: 'Employee Hub',
+                    subtitle: 'Staff management',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const EmployeePage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.security,
+                    title: 'SDSA Portal',
+                    subtitle: 'Security & access',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const SDSAPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.handshake,
+                    title: 'Partnerships',
+                    subtitle: 'Business partners',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const PartnerPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.person_search,
+                    title: 'Agent Network',
+                    subtitle: 'External agents',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const AgentPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.payment,
+                    title: 'Payout Center',
+                    subtitle: 'Financial transactions',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const PayoutPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.qr_code,
+                    title: 'DSA Codes',
+                    subtitle: 'Code management',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const DSACodesPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.account_balance,
+                    title: 'Banking',
+                    subtitle: 'Bank relationships',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const BankersPage());
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.folder,
+                    title: 'Portfolio',
+                    subtitle: 'Investment management',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToPage(const PortfolioPage());
+                    },
+                  ),
+                ],
+              ),
+            ),
+            
+            // Bottom Section
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // Settings
+                  _buildDrawerItem(
+                    icon: Icons.settings,
+                    title: 'Settings',
+                    subtitle: 'App configuration',
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showSnackBar('Settings');
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  // Logout
+                  _buildDrawerItem(
+                    icon: Icons.logout,
+                    title: 'Logout',
+                    subtitle: 'Sign out',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.of(context).pushReplacement(
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            return SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(-1.0, 0.0),
+                                end: Offset.zero,
+                              ).animate(animation),
+                              child: child,
+                            );
+                          },
+                          transitionDuration: const Duration(milliseconds: 300),
+                        ),
+                      );
+                    },
+                    isLogout: true,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isActive = false,
+    bool isLogout = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      decoration: BoxDecoration(
+        color: isActive 
+            ? Colors.white.withOpacity(0.2)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: isActive 
+            ? Border.all(color: Colors.white.withOpacity(0.3))
+            : null,
+      ),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: isLogout 
+                ? Colors.red.withOpacity(0.2)
+                : isActive 
+                    ? Colors.white.withOpacity(0.2)
+                    : Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            color: isLogout ? Colors.red : Colors.white,
+            size: 20,
+          ),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: isLogout ? Colors.red : Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(
+            color: isLogout ? Colors.red.withOpacity(0.7) : Colors.white.withOpacity(0.7),
+            fontSize: 12,
+          ),
+        ),
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
